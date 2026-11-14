@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR Codes</title>
+<style>
+  body { margin: 0; padding: 24px 16px; font-family: system-ui, sans-serif; background: #fff; color: #222; text-align: center; }
+  .row { display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; margin-top: 24px; }
+  .card { padding: 16px; }
+  .qr { display: inline-block; padding: 12px; background: #fff; border: 1px solid #ddd; }
+  h2 { margin: 12px 0 4px; } small { color: #666; word-break: break-all; display: block; max-width: 260px; margin: 0 auto 8px; }
+  button { padding: 8px 16px; border: 0; border-radius: 6px; background: #1a73e8; color: #fff; cursor: pointer; }
+</style>
+</head>
+<body>
+<h1>Scan to open</h1>
+<div id="warn" style="color:#b00;display:none">This page is on a local address, so these QR codes only work on this computer. Open qr.html from the public (hosted) site to make QR codes that work on any phone.</div>
+<div class="row" id="row"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  var base = location.href.replace(/[^\/]*$/, "");
+  if (/^(localhost|127\.|\[::1\])/.test(location.hostname) || location.protocol === "file:") document.getElementById("warn").style.display = "block";
+  [["Mayur", "mayur.html"], ["Mohit", "mohit.html"]].forEach(function (p) {
+    var url = base + p[1], card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = '<div class="qr"></div><h2>' + p[0] + '</h2><small>' + url + '</small><button>Download PNG</button>';
+    document.getElementById("row").appendChild(card);
+    var box = card.querySelector(".qr");
+    new QRCode(box, { text: url, width: 260, height: 260, correctLevel: QRCode.CorrectLevel.M });
+    card.querySelector("button").onclick = function () {
+      var cv = box.querySelector("canvas"), a = document.createElement("a");
+      a.href = cv.toDataURL("image/png"); a.download = "qr-" + p[0].toLowerCase() + ".png"; a.click();
+    };
+  });
+</script>
+</body>
+</html>
