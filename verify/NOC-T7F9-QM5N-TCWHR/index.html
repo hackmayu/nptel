@@ -7,7 +7,10 @@
 <style>html,body{margin:0;min-height:100%;background:#fff;font-family:system-ui,sans-serif}main{padding:16px 15vw;box-sizing:border-box}img{display:block;width:100%;height:auto;box-shadow:0 0 0 1px #eee}footer{text-align:center;color:#555;font-size:12px;padding:8px 16px 16px}</style>
 </head>
 <body>
-<main><img src="/krishna.jpeg"></main>
+<main><img data-pdf="/krishna.pdf"></main>
 <footer> </footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";(async()=>{const image=document.querySelector("img[data-pdf]");try{const pdf=await pdfjsLib.getDocument(image.dataset.pdf).promise;for(let n=1;n<=pdf.numPages;n++){const page=await pdf.getPage(n),view=page.getViewport({scale:2}),canvas=document.createElement("canvas");canvas.width=view.width;canvas.height=view.height;await page.render({canvasContext:canvas.getContext("2d"),viewport:view}).promise;const target=n===1?image:image.cloneNode();target.src=canvas.toDataURL("image/png");if(n>1)image.parentNode.appendChild(target)}}catch(error){image.replaceWith(Object.assign(document.createElement("a"),{href:image.dataset.pdf,textContent:"Open PDF"}))}})();</script>
 </body>
 </html>
